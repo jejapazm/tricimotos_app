@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mototaxis_app/screens/screens.dart';
 
 void main() => runApp(const MapsApp());
 
@@ -7,17 +8,10 @@ class MapsApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'MapsApp',
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('App'),
-        ),
-        body: const Center(
-          child: Text('Hello World'),
-        ),
-      ),
+      home: GpsAccessScreen()
     );
   }
 }
