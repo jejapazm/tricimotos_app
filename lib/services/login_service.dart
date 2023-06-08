@@ -1,6 +1,8 @@
 import 'package:graphql/client.dart';
 import 'package:mototaxis_app/services/graphql_client.dart';
 
+import '../global/shared_preferences.dart';
+
 class Response {
   bool ok;
   String message;
@@ -17,7 +19,9 @@ Future<Response> login(username, password) async {
         mutation Login($loginInput: LoginInput!) {
           login(loginInput: $loginInput) {
             id
-            
+            names
+            surnames
+            rol
           }
         }
       ''',
@@ -35,10 +39,10 @@ Future<Response> login(username, password) async {
   } else {
     if (result.data != null) {
       if (result.data?["login"]["id"] != null) {
-        // Prefs.name = (result.data?["login"]["user"]["names"] ?? "") + " " +
+        Prefs.name = (result.data?["login"]["names"] ?? "") + " " + (result.data?["login"]["surnames"] ?? "");
         //     (result.data?["login"]["user"]["surnames"] ?? "");
         // Prefs.username = result.data?["login"]["user"]["username"] ?? username;
-        // Prefs.roles = ((result.data?["login"]["user"]["roles"]).toString()).replaceAll('[', '').replaceAll(']', '').split('');
+        Prefs.rol = result.data?["login"]["rol"];
         return Response(true, "Ingreso exitoso");
       }
     }

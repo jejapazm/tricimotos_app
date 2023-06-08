@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:mototaxis_app/services/login_service.dart';
+import 'package:mototaxis_app/global/shared_preferences.dart';
+import 'package:mototaxis_app/services/login_service.dart' as login_service;
 import 'package:mototaxis_app/ui/messages.dart';
 
 import '../constants/palette.dart';
@@ -20,40 +21,37 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Palette().white,
-      body: Padding(
-        padding: const EdgeInsets.only(right: 20.0, left: 20.0),
-        child: Stack(
-          children: [
-            // SingleChildScrollView(),
-            _fondo(),
-            _formulario(),
-          ],
-        ),
+      backgroundColor: Palette().cAliceBlue,
+      body: Stack(
+        children: [
+          _fondo(),
+          _formulario(),
+        ],
       ),
     );
   }
 
   Widget _fondo() {
+    final size = MediaQuery.of(context).size;
+
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.only(top: 120.0, bottom: 20.0),
-          child: Row(
-            children: [
-              Expanded(
-                child: CircleAvatar(
-                  backgroundColor: Palette().gris2,
-                  radius: 50.0,
-                  child: Icon(
-                    Icons.widgets,
-                    size: 60.0,
-                    color: Palette().oscuro,
-                  ),
+        const SizedBox(height: 80),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Center(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(30),
+                child: Image.asset(
+                  'assets/logo-tricimotos.png',
+                  height: size.width * 0.4,
+                  width: size.width * 0.4,
+                  fit: BoxFit.cover,
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ],
     );
@@ -64,21 +62,25 @@ class _LoginScreenState extends State<LoginScreen> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          Container(
-            transform: Matrix4.translationValues(0.0, 30.0, 0.0),
-            padding:
-                EdgeInsets.only(top: 130.0 + size.height * 0.2, bottom: 10.0),
-            child: Column(
-              children: [
-                const SizedBox(height: 30.0),
-                _userInput(),
-                const SizedBox(height: 12.0),
-                _passwordInput(),
-                const SizedBox(height: 12.0),
-                _loginButton(context),
-                const SizedBox(height: 30.0),
-                _newAccount(context),
-              ],
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 25.0),
+            child: Container(
+              height: size.height,
+              transform: Matrix4.translationValues(0.0, 30.0, 0.0),
+              padding:
+                  EdgeInsets.only(top: 130.0 + size.height * 0.2, bottom: 10.0),
+              child: Column(
+                children: [
+                  const SizedBox(height: 30.0),
+                  _userInput(),
+                  const SizedBox(height: 12.0),
+                  _passwordInput(),
+                  const SizedBox(height: 32.0),
+                  _loginButton(context),
+                  const SizedBox(height: 30.0),
+                  _newAccount(context),
+                ],
+              ),
             ),
           )
         ],
@@ -88,16 +90,17 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _userInput() {
     return TextField(
-      style: const TextStyle(fontSize: 18),
+      style: const TextStyle(fontSize: 17),
       controller: _userController,
-      decoration: const InputDecoration(
-        contentPadding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 10.0),
+      decoration: InputDecoration(
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 17.0, horizontal: 10.0),
         hintText: 'Ingrese su Usuario',
-        focusedBorder:
-            OutlineInputBorder(borderSide: BorderSide(color: Colors.black45)),
-        border:
-            OutlineInputBorder(borderSide: BorderSide(color: Colors.black45)),
-        fillColor: Colors.grey,
+        enabledBorder: const OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.black12)),
+        focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Palette().cCinereous)),
+        fillColor: Palette().cPearl,
         filled: true,
       ),
     );
@@ -105,17 +108,18 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _passwordInput() {
     return TextField(
-      style: const TextStyle(fontSize: 18),
+      style: const TextStyle(fontSize: 17),
       controller: _passwordController,
       obscureText: true,
-      decoration: const InputDecoration(
-        contentPadding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 10.0),
+      decoration: InputDecoration(
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 17.0, horizontal: 10.0),
         hintText: 'Ingrese su Contraseña',
-        focusedBorder:
-            OutlineInputBorder(borderSide: BorderSide(color: Colors.black45)),
-        border:
-            OutlineInputBorder(borderSide: BorderSide(color: Colors.black45)),
-        fillColor: Colors.grey,
+        enabledBorder: const OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.black12)),
+        focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Palette().cCinereous)),
+        fillColor: Palette().cPearl,
         filled: true,
       ),
     );
@@ -128,7 +132,6 @@ class _LoginScreenState extends State<LoginScreen> {
           child: TextButton(
             onPressed: _ingresable
                 ? () async {
-                  print('LOGIN PRESIONADO');
                     setState(() => _ingresable = false);
                     if (await Connectivity().checkConnectivity() ==
                         ConnectivityResult.none) {
@@ -137,26 +140,29 @@ class _LoginScreenState extends State<LoginScreen> {
                             Palette().bad, Icons.signal_wifi_off);
                       }
                     } else {
-                      Response result = await login(
+                      final result = await login_service.login(
                           _userController.text, _passwordController.text);
                       if (context.mounted) {}
                       if (result.ok) {
                         getSnackbar(context, result.message, Palette().ok,
                             Icons.password);
-                        Navigator.pushReplacementNamed(context, 'loading');
+                        if (Prefs.rol == 'superAdmin') {
+                          Navigator.pushReplacementNamed(context, 'admin_home');
+                        } else {
+                          Navigator.pushReplacementNamed(context, 'loading');
+                        }
                       } else {
                         _ingresable = await getSnackbar(context, result.message,
                             Palette().bad, Icons.password);
                       }
-                      // // Navigator.pushReplacementNamed(context, 'chekpoint_home');
                     }
                     setState(() => _ingresable = true);
                   }
-                : () {
-                  print('LOGIN PRESIONADO 2');
-                },
+                : () {},
             style: TextButton.styleFrom(
-              backgroundColor: Palette().button1,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30.0)),
+              backgroundColor: Palette().cRitchBlack,
               textStyle: const TextStyle(fontSize: 18.0),
             ),
             child: Padding(
@@ -177,11 +183,11 @@ class _LoginScreenState extends State<LoginScreen> {
       children: [
         Expanded(
           child: TextButton(
-            onPressed: () => {},
+            onPressed: () => Navigator.pushNamed(context, 'create_account'),
             child: Text(
               'Crear cuenta nueva',
               style: TextStyle(
-                  color: Palette().button1,
+                  color: Palette().cCinereous,
                   fontSize: 18,
                   fontWeight: FontWeight.w400),
             ),

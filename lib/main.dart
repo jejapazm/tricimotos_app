@@ -3,7 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mototaxis_app/blocs/blocs.dart';
 import 'package:mototaxis_app/screens/screens.dart';
 
-void main() {
+import 'global/shared_preferences.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Prefs.init();
   runApp(
     MultiBlocProvider(
       providers: [
@@ -25,9 +29,12 @@ class MapsApp extends StatelessWidget {
       title: 'MapsApp',
       // home: GpsAccessScreen(),
       initialRoute: 'login',
+      // initialRoute: 'loading',
       routes: {
         'login': (_) => const LoginScreen(),
-        'loading': (_) => const LoadingScreen()
+        'loading': (_) => const LoadingScreen(),
+        'admin_home': (_) => const AdminHomeScreen(),
+        'create_account': (_) => const CreateAccountScreen()
       },
     );
   }

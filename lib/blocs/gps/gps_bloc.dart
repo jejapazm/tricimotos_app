@@ -9,7 +9,7 @@ part 'gps_event.dart';
 part 'gps_state.dart';
 
 class GpsBloc extends Bloc<GpsEvent, GpsState> {
-  StreamSubscription? GpsServiceSubscription;
+  StreamSubscription? gpsServiceSubscription;
   GpsBloc()
       : super(
           const GpsState(
@@ -51,7 +51,7 @@ class GpsBloc extends Bloc<GpsEvent, GpsState> {
   Future<bool> _checkGpsStatus() async {
     final isEnable = await Geolocator.isLocationServiceEnabled();
 
-    GpsServiceSubscription =
+    gpsServiceSubscription =
         Geolocator.getServiceStatusStream().listen((event) {
       final isEnabled = (event.index == 1) ? true : false;
       add(
@@ -93,7 +93,7 @@ class GpsBloc extends Bloc<GpsEvent, GpsState> {
 
   @override
   Future<void> close() {
-    GpsServiceSubscription?.cancel();
+    gpsServiceSubscription?.cancel();
     return super.close();
   }
 }

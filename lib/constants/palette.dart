@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 
 class Palette {
 
-  Color primary1dark = const Color.fromRGBO(46, 29, 91, 1.0);
+  Color cRitchBlack = const Color.fromRGBO(19, 27, 35, 1.0);
   
-  Color primary1 = const Color.fromRGBO(135, 88, 255, 1.0);
+  Color cPearl = const Color.fromRGBO(231, 223, 198, 1.0);
   
-  Color primary1light = const Color.fromRGBO(225, 213, 255, 1.0);
+  Color cAliceBlue = const Color.fromRGBO(233, 241, 247, 1.0);
 
-  Color oscuro = const Color.fromRGBO(24, 24, 24, 1.0);
+  Color cUCLABlue = const Color.fromRGBO(34, 116, 165, 1.0);
+
+  Color cCinereous = const Color.fromRGBO(129, 108, 97, 1.0);
 
   Color gris1 = const Color.fromRGBO(197, 197, 194, 1.0);
 
@@ -22,7 +24,6 @@ class Palette {
   
   Color white = const Color.fromRGBO(255, 255, 255, 1.0);
 
-  Color button1 = const Color.fromRGBO(45, 89, 184, 1);
   
   Color appbar = const Color.fromRGBO(51, 70, 144, 1);
 
