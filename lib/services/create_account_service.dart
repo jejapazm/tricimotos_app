@@ -1,16 +1,21 @@
 import 'package:graphql/client.dart';
 import 'package:mototaxis_app/services/graphql_client.dart';
 
-// import '../global/shared_preferences.dart';
-
 class Response {
   bool ok;
   String message;
   Response(this.ok, this.message);
 }
 
-Future<Response> createUser({username, password, names, surnames, rol,
-    identification, contactNumber}) async {
+Future<Response> createUser(
+    {username,
+    password,
+    names,
+    surnames,
+    rol,
+    identification,
+    contactNumber}) async {
+      
   final GraphQLClient client = getGraphQLClient();
 
   final options = MutationOptions(
@@ -23,6 +28,7 @@ Future<Response> createUser({username, password, names, surnames, rol,
             names
             surnames
             identification
+            contactNumber
           }
         }
       ''',
@@ -34,8 +40,8 @@ Future<Response> createUser({username, password, names, surnames, rol,
         'names': names,
         'surnames': surnames,
         'rol': rol,
+        'contactNumber': contactNumber,
         'identification': identification,
-        'contactNumber': contactNumber
       }
     },
   );
@@ -43,12 +49,11 @@ Future<Response> createUser({username, password, names, surnames, rol,
   final QueryResult result = await client.mutate(options);
 
   if (result.hasException) {
-    print('${result.exception?.raw?[0]?["extensions"]["response"]["message"]}');
-    return Response(false, "Usuario o contraseña incorrectos");
+    return Response(false,
+        '${result.exception?.raw?[0]?["extensions"]["response"]["message"]}');
   } else {
     if (result.data != null) {
       if (result.data?["createUser"]["id"] != null) {
-        print('OOOOOOOOOOOO');
         // Prefs.name = (result.data?["login"]["names"] ?? "") +
         //     " " +
         //     (result.data?["login"]["surnames"] ?? "");
@@ -58,6 +63,6 @@ Future<Response> createUser({username, password, names, surnames, rol,
         return Response(true, "Ingreso exitoso");
       }
     }
+    return Response(false, "");
   }
-  return Response(false, "");
 }

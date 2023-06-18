@@ -1,24 +1,25 @@
-import 'package:flutter/material.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:mototaxis_app/services/create_account_service.dart';
-import 'package:mototaxis_app/ui/messages.dart';
+import 'package:flutter/material.dart';
+import 'package:mototaxis_app/constants/palette.dart';
+import '../services/create_account_service.dart';
+import '../ui/messages.dart';
 
-import '../constants/palette.dart';
-
-class CreateAccountScreen extends StatefulWidget {
-  const CreateAccountScreen({super.key});
+class AdminCreateDriverScreen extends StatefulWidget {
+  const AdminCreateDriverScreen({super.key});
 
   @override
-  State<CreateAccountScreen> createState() => _CreateAccountScreenState();
+  State<AdminCreateDriverScreen> createState() =>
+      _AdminCreateDriverScreenState();
 }
 
-class _CreateAccountScreenState extends State<CreateAccountScreen> {
+class _AdminCreateDriverScreenState extends State<AdminCreateDriverScreen> {
   bool _ingresable = true;
   final _contactController = TextEditingController();
   final _passwordController = TextEditingController();
   final _passwordRepeatController = TextEditingController();
   final _namesController = TextEditingController();
   final _surnamesController = TextEditingController();
+  final _idController = TextEditingController();
   final _usernameController = TextEditingController();
 
   @override
@@ -33,29 +34,29 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                 Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       const SizedBox(height: 80.0),
                       _title(),
                       const SizedBox(height: 30.0),
-                      _subtitle(
-                          'Con tu nombre podemos hacer seguimiento en caso de que necesites ayuda'),
+                      _subtitle('Datos del conductor'),
                       const SizedBox(height: 10.0),
                       _nameInput(),
                       const SizedBox(height: 12.0),
                       _surnameInput(),
                       const SizedBox(height: 12.0),
-                      _subtitle(
-                          'Tu correo se usará como usuario para que ingreses a nuestra app'),
-                      const SizedBox(height: 10.0),
-                      _userInput(),
+                      _identificationInput(),
                       const SizedBox(height: 12.0),
-                      _subtitle(
-                          'Tu contacto nos ayuda a poder comunicarnos contigo en caso de que requieras atención'),
-                      const SizedBox(height: 10.0),
                       _contactInput(),
                       const SizedBox(height: 12.0),
                       _subtitle(
-                          'Crea una contraseña fuerte, que incluya números, mayúsculas y minúsculas'),
+                          'Correo que se usará el conductor para el ingreso a la app'),
+                      const SizedBox(height: 10.0),
+                      _userInput(),
+                      const SizedBox(height: 10.0),
+                      _subtitle(
+                          'Crea una contraseña para el conductor, que incluya números, mayúsculas y minúsculas'),
                       const SizedBox(height: 10.0),
                       _passwordInput(),
                       const SizedBox(height: 12.0),
@@ -88,7 +89,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
 
   Widget _title() {
     return const Text(
-      'Para crear una nueva cuenta necesitamos los siguientes datos',
+      'Registra los siguientes campos para crear un mototaxista',
       style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
     );
   }
@@ -107,43 +108,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
       decoration: InputDecoration(
         contentPadding:
             const EdgeInsets.symmetric(vertical: 17.0, horizontal: 10.0),
-        hintText: 'Ingrese nombre',
-        enabledBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.black12)),
-        focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Palette().cCinereous)),
-        fillColor: Palette().cPearl,
-        filled: true,
-      ),
-    );
-  }
-
-  Widget _surnameInput() {
-    return TextFormField(
-      style: const TextStyle(fontSize: 17),
-      controller: _surnamesController,
-      decoration: InputDecoration(
-        contentPadding:
-            const EdgeInsets.symmetric(vertical: 17.0, horizontal: 10.0),
-        hintText: 'Ingrese su apellido',
-        enabledBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.black12)),
-        focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Palette().cCinereous)),
-        fillColor: Palette().cPearl,
-        filled: true,
-      ),
-    );
-  }
-
-  Widget _userInput() {
-    return TextFormField(
-      style: const TextStyle(fontSize: 17),
-      controller: _usernameController,
-      decoration: InputDecoration(
-        contentPadding:
-            const EdgeInsets.symmetric(vertical: 17.0, horizontal: 10.0),
-        hintText: 'Ingrese su correo',
+        hintText: 'Ingrese nombres',
         enabledBorder: const OutlineInputBorder(
             borderSide: BorderSide(color: Colors.black12)),
         focusedBorder: OutlineInputBorder(
@@ -163,6 +128,62 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
         contentPadding:
             const EdgeInsets.symmetric(vertical: 17.0, horizontal: 10.0),
         hintText: 'Ingrese contacto',
+        enabledBorder: const OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.black12)),
+        focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Palette().cCinereous)),
+        fillColor: Palette().cPearl,
+        filled: true,
+      ),
+    );
+  }
+
+  Widget _surnameInput() {
+    return TextFormField(
+      style: const TextStyle(fontSize: 17),
+      controller: _surnamesController,
+      decoration: InputDecoration(
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 17.0, horizontal: 10.0),
+        hintText: 'Ingrese apellidos',
+        enabledBorder: const OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.black12)),
+        focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Palette().cCinereous)),
+        fillColor: Palette().cPearl,
+        filled: true,
+      ),
+    );
+  }
+
+  Widget _userInput() {
+    return TextFormField(
+      style: const TextStyle(fontSize: 17),
+      controller: _usernameController,
+      keyboardType: TextInputType.emailAddress,
+      decoration: InputDecoration(
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 17.0, horizontal: 10.0),
+        hintText: 'Ingrese correo',
+        enabledBorder: const OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.black12)),
+        focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Palette().cCinereous)),
+        fillColor: Palette().cPearl,
+        filled: true,
+      ),
+    );
+  }
+
+  Widget _identificationInput() {
+    return TextFormField(
+      style: const TextStyle(fontSize: 17),
+      controller: _idController,
+      keyboardType: TextInputType.number,
+      decoration: InputDecoration(
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 17.0, horizontal: 10.0),
+        hintText: 'Ingrese la identificación',
         enabledBorder: const OutlineInputBorder(
             borderSide: BorderSide(color: Colors.black12)),
         focusedBorder: OutlineInputBorder(
@@ -231,14 +252,13 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                           password: _passwordController.text,
                           names: _namesController.text,
                           surnames: _surnamesController.text,
-                          rol: 'passenger',
+                          rol: 'driver',
                           contactNumber: _contactController.text,
-                          identification: null);
-                      if (context.mounted) {}
+                          identification: _idController.text);
                       if (result.ok) {
                         getSnackbar(context, result.message, Palette().ok,
                             Icons.password);
-                        Navigator.pushReplacementNamed(context, 'loading');
+                        Navigator.pushReplacementNamed(context, 'admin_home');
                       } else {
                         _ingresable = await getSnackbar(context, result.message,
                             Palette().bad, Icons.password);
@@ -256,7 +276,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 10.0),
               child: Text(
-                'Crear Cuenta',
+                'Crear Mototaxista',
                 style: TextStyle(color: Palette().white),
               ),
             ),
